@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "es2015",
+    "resolveJsonModule": true,
+    "outDir": "./build",
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/json-d-ts"
+    ],
+    "moduleResolution": "node"
+  },
+  "types": [
+      "node"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+    "class/Config.ts",
+    "class/Logger.ts",
+    "app.ts"
+  ]
+}
