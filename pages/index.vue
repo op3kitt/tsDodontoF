@@ -1,5 +1,7 @@
 <template lang="pug">
   section
+    button(@click="getRoomStates();") ルーム取得
+    RoomList(:rooms="rooms",:webSocket="webSocket")
     button(@click="openLogin();")
       div(v-if="userStatus") {{user.displayName }}
       div(v-else) 未ログイン
@@ -9,15 +11,16 @@
 
 <script>
 import Login from '~/components/Login.vue';
-import Modal from '~/components/Modal.vue';
 import Version from '~/components/Version.vue';
 import createRoom from '~/components/createRoom.vue';
+import RoomList from '~/components/RoomList.vue';
 
 export default {
   layout: 'default',
   data () {
     return {
-      webSocket: {}
+      webSocket: {},
+      rooms: []
     };
   },
   computed: {
@@ -30,17 +33,26 @@ export default {
     }
   },
   components: {
-    Modal
+    RoomList
   },
   mounted () {
     this.webSocket = new WebSocket(`ws://${location.host}/`);
 
     this.webSocket.onopen = () => {
+      this.getRoomStates();
       console.log("接続完了");
     };
 
     this.webSocket.onmessage = (data) => {
       console.log(data);
+      try{
+        const json = JSON.parse(data.data);
+        switch(json.event){
+          case "getRoomStates":
+            this.rooms = json.data;
+          break;
+        }
+      }catch(e){}
     };
 
     this.webSocket.onclose = () => {
@@ -70,6 +82,9 @@ export default {
           webSocket: this.webSocket
         }
       }).then(modal => {modal.webSocket = this.webSocket;});
+    },
+    getRoomStates() {
+      this.webSocket.send(JSON.stringify({cmd: "getRoomStates"}));
     }
   }
 }
