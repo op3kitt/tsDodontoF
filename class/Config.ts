@@ -21,9 +21,13 @@ class Config
       storageBucket: "dodontofauth.appspot.com",
       messagingSenderId: "494526771402"
     },
-    bcdiceUrl: "http://127.0.0.1:8001/",
+    bcdiceUrl: "https://www.taruki.com/bcdice-api/",
 
     APP_PATH: null,
+
+    saveFile: {
+      mode: "file",
+    },
 
     load: (file) => {
       try{
