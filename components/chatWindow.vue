@@ -1,19 +1,23 @@
 <template lang="pug">
-  vue-draggable-resizable(dragHandle=".drag",:x="0",:y="200",:w="600",:h="91")
-    modal-item(:footer="false")
+#chat
+  vue-draggable-resizable(dragHandle=".drag",:x="0",:y="200",:w="width",:h="height+24",@resizing="onResize")
+    modal-item(:footer="false",:width="width")
       template(slot="header")
         h4.drag
           div チャット
-      div(slot="body")
-        #tab.dragprev
-          p(v-for="(item,index) in chatChannels",:class={active:index==chanel}).tab {{item}}
-        #log.dragprev
-          div(v-for="(item,index) in chatChannels",:class={active:index==channel}).log
-            p(v-for="item in log[index]",style="`color: #${item.color}`")
-              | {{item.senderName}}
-              | :
-              | {{item.message}}
-        .r
+      div(slot="body",:style="`height:${height}px`")
+        .body
+          #tab.dragprev
+            template(v-for="(item,index) in chatChannels")
+              p(@click="setChannel(index);",:class="{active:index==channel}").tab {{item}}
+          #log.dragprev
+            template(v-for="(item,index) in chatChannels")
+              div(:class="{active:index==channel}",v-chat-schroll="{smooth:true}").log
+                p(v-for="item in log[index]",:style="`color: #${item.color}`")
+                  | {{item.senderName}}
+                  | :
+                  | {{item.message|nl2br}}
+        .body2
           | 名前
           input#chatname(v-model="senderName")
           button.img#btn_private.disabled
@@ -56,7 +60,7 @@
           button.img#btn_talk.disabled
             img(src="/img/icons/emoticon_smile.png")
             .helptext テキスト読み上げなし
-        .r
+          br
           | 発言
           textarea#chattext(v-model="message",@keypress="checkkey")
           div.btn_area
@@ -75,14 +79,22 @@ export default {
       senderName: "",
       message: "",
       color: "#000000",
+      width: 900,
+      height: 300
     }
   },
   props: [
     'webSocket', 'log', 'chatChannels'
   ],
+  plugins: ['~/plugins/vue-chat-scroll'],
   components: {
     ModalItem,
     VueDraggableResizable
+  },
+  filters: {
+    nl2br(str){
+      return str.replace(/\n/g, "\n");
+    }
   },
   methods: {
     checkkey(e){
@@ -104,15 +116,61 @@ export default {
         }
       }));
       this.message = "";
-    }
+      return false;
+    },
+    setChannel(channel){
+      this.channel = channel;
+    },
+    onResize: function (x, y, width, height) {
+      this.x = x
+      this.y = y
+      this.width = width
+      this.height = height
+    },
   }
 }
 </script>
 
 <style lang="scss">
-#log p {
-  margin: 0;
+#chat {
+  width: 900px;
+  height: 300px;
+#log{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 2.2em;
+  left: 10px;
+  right: 10px;
+  background: #fff;
+  overflow: hidden;
+
+  div {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    bottom: -18px;
+    overflow: scroll;
+
+    .time {
+      color: black;
+    }
+  }
+
+  div.active {
+    display: block;
+  }
+
+  p {
+    margin: 0;
+  }
 }
+    
 
   label, button {
     & .helptext {
@@ -131,4 +189,88 @@ export default {
       inline-size: max-content;
     }
   }
+
+  .body {
+    padding: 0.3em;
+    position: absolute;
+    top: 22px;
+    left: 0;
+    right: 0;
+    bottom: 105px;
+
+    #tab {
+      padding-left: 10px;
+
+      & > p {
+        background: linear-gradient(to bottom, #ccc, transparent 120%);
+        float: left;
+        margin: 0;
+        padding: 0.2em 1em;
+        margin-right: 4px;
+      }
+
+      & > p.active {
+        background: #fff;
+      }
+    }
+
+    #log{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+      top: 2.2em;
+      left: 10px;
+      right: 10px;
+      background: #fff;
+      overflow: hidden;
+
+      div {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        bottom: -18px;
+        overflow: scroll;
+
+        .time {
+          color: black;
+        }
+
+        pre {
+          margin: 0;
+        }
+      }
+
+      div.active {
+        display: block;
+      }
+    }
+  }
+      .body2 {
+    position: absolute;
+    padding: 0.3em;
+    bottom: 0;
+
+    textarea {
+      vertical-align: top;
+      width: 700px;
+      height: 70px;
+    }
+
+    button.fix {
+      float: right;
+      width: 100px;
+    }
+
+    .btn_area{
+      width: 120px;
+      float: right;
+    }
+  }
+
+}
 </style>
