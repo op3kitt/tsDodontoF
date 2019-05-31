@@ -46,7 +46,6 @@ export default {
     };
 
     this.webSocket.onmessage = (data) => {
-      console.log(data);
       try{
         const json = JSON.parse(data.data);
         switch(json.event){
@@ -72,11 +71,14 @@ export default {
             }
           break;
           case "chatMessage":
-            this.log[json.data.channel] = this.log[json.data.channel].concat(json.data);
-          console.log(this.log);
+            for(var item of json.data){
+              this.log[item.channel].push(item);
+            }
           break;
         }
-      }catch(e){}
+      }catch(e){
+        console.log(e);
+      }
     };
 
     this.webSocket.onclose = () => {

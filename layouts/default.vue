@@ -94,4 +94,15 @@ div.modal-content {
     color: black;
   }
 }
+
+.handle,.vdr{position:absolute;box-sizing:border-box}
+.handle-tl{width:8px;height:8px;top:-4px;left:-4px;cursor:nw-resize}
+.handle-tm{height:8px;top:-4px;left:4px;right:4px;cursor:n-resize}
+.handle-tr{width:8px;height:8px;top:-4px;right:-4px;cursor:ne-resize}
+.handle-ml{left:-4px;cursor:w-resize}
+.handle-ml,.handle-mr{width:8px;top:4px;bottom:4px;}
+.handle-mr{right:-4px;cursor:e-resize}
+.handle-bl{width:8px;height:8px;bottom:-4px;left:-4px;cursor:sw-resize}
+.handle-bm{height:8px;bottom:-4px;left:4px;right:4px;cursor:s-resize}
+.handle-br{width:8px;height:8px;bottom:-4px;right:-4px;cursor:se-resize}
 </style>
