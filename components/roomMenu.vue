@@ -107,7 +107,7 @@
     img(src="img/icons/camera.png")
   #comd
     div(v-show="mapEdit")
-      button
+      button(@click="openCreateFloorTileWindow")
         font-awesome-icon(icon="plus")
 </template>
 
@@ -115,6 +115,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import createFloorTileWindow from '~/components/window/createFloorTileWindow.vue';
 
 library.add(faPlus);
 
@@ -124,12 +125,25 @@ export default {
       mapEdit: false,
     }
   },
+  props: ['webSocket'],
   components: {
-    FontAwesomeIcon,
+    FontAwesomeIcon
   },
   methods: {
     modeMapEdit() {
       this.mapEdit = !this.mapEdit;
+    },
+    openCreateFloorTileWindow() {
+      this.$modal.resolve({
+        id: 'createFloorTileWindow',
+        component: createFloorTileWindow,
+        options: {
+          destroy: true
+        },
+        props: {
+          webSocket: this.webSocket
+        }
+      })
     }
   }
 }

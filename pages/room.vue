@@ -33,8 +33,9 @@ export default {
       
       this.$modal.open({
         component: roomLogin,
+        id: 'login',
         options: {
-          destroy: true
+          destroy: false
         },
         props: {
           webSocket: this.webSocket,
@@ -51,7 +52,7 @@ export default {
         switch(json.event){
           case "loginResult":
             if(json.result){
-              this.$modal.close();
+              this.$modal.close('login', false);
             }else{
               if(json.password){
                 console.log(this.$modal.currModal);

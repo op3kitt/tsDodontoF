@@ -12,7 +12,7 @@
               p(@click="setChannel(index);",:class="{active:index==channel}").tab {{item}}
           #log.dragprev
             template(v-for="(item,index) in chatChannels")
-              div(:class="{active:index==channel}",v-chat-schroll="{smooth:true}").log
+              div(:class="{active:index==channel}",v-chat-scroll="{smooth:true}").log
                 p(v-for="item in log[index]",:style="`color: #${item.color}`")
                   | {{item.senderName}}
                   | :
