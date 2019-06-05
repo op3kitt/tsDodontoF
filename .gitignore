@@ -12,3 +12,4 @@ package-lock.json
 /save/**
 !/save/.gitkeep
 .vscode/
+/config.json
